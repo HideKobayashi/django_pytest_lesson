@@ -246,3 +246,57 @@ polls
 
 1 directory, 7 files
 ```
+
+### ビューを作る
+
+`polls/views.py`
+
+```python
+from django.http import HttpResponse
+
+
+def index(request):
+    return HttpResponse("Hello, world. You're at the polls index.")
+```
+
+### URLconfを作る
+
+`polls/urls.py`
+
+```python
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path('', views.index, name='index'),
+]
+```
+
+### ルートのURLconfにpolls.urlsモジュールの記述を反映させる
+
+`mysite/urls.py`
+
+```python
+from django.contrib import admin
+from django.urls import include, path
+
+urlpatterns = [
+    path('polls/', include('polls.urls')),
+    path('admin/', admin.site.urls),
+]
+```
+
+ここまで終わったら、開発用サーバーを起動します。
+
+```
+$ python manage.py runserver 8080
+```
+
+ブラウザで確認します。
+
+```
+http://localhost:8080/polls/
+```
+
+ブラウザの画面の左上に　"Hello, world. You're at the polls index." が表示されればOKです。
