@@ -20,7 +20,7 @@ python のバージョンを確認します。
 
 ```
 $ python -V
-ython 3.6.11
+python 3.6.11
 ```
 
 ## Python 仮想環境を使う
@@ -92,5 +92,132 @@ zipp               3.6.0
 
 ```
 (venv_py36) $ pip freeze > requirements.lock
+```
+
+以下の説明では、先頭のプロンプトは $ と記述しますが、全て仮想環境を有効にした状態で実施してください。
+
+## Django のプロジェクトを作成する
+
+下記のページを参考にして、Djangoプロジェクトを作成する。
+
+はじめての Django アプリ作成、その 1
+https://docs.djangoproject.com/ja/3.2/intro/tutorial01/
+
+下記のようなファイルが自動作成されます。
+
+```
+$ tree mysite
+mysite
+├── manage.py
+└── mysite
+    ├── __init__.py
+    ├── asgi.py
+    ├── settings.py
+    ├── urls.py
+    └── wsgi.py
+```
+
+開発用Webサーバをローカル環境で起動します
+
+```
+$ cd mysite
+$ python manage.py runserver 8080
+```
+
+Webブラウザを立ち上げて、下記のURLを指定します。
+```
+http://localhost:8080/
+```
+ロケットのアニメーションが表示されればOKです。
+
+ターミナルには下記のようなメッセージが表示されます。
+```
+$ python manage.py runserver 8080
+Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+You have 18 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+Run 'python manage.py migrate' to apply them.
+November 26, 2021 - 16:56:30
+Django version 3.2.9, using settings 'mysite.settings'
+Starting development server at http://127.0.0.1:8080/
+Quit the server with CONTROL-C.
+[26/Nov/2021 16:57:02] "GET / HTTP/1.1" 200 10697
+[26/Nov/2021 16:57:02] "GET /static/admin/css/fonts.css HTTP/1.1" 200 423
+[26/Nov/2021 16:57:02] "GET /static/admin/fonts/Roboto-Regular-webfont.woff HTTP/1.1" 200 85876
+[26/Nov/2021 16:57:02] "GET /static/admin/fonts/Roboto-Light-webfont.woff HTTP/1.1" 200 85692
+[26/Nov/2021 16:57:02] "GET /static/admin/fonts/Roboto-Bold-webfont.woff HTTP/1.1" 200 86184
+Not Found: /favicon.ico
+[26/Nov/2021 16:57:03] "GET /favicon.ico HTTP/1.1" 404 2110
+```
+
+開発用サーバを停止するには、Ctrl-c を押します。
+
+
+## モデルのマイグレーション
+
+初期状態で、管理画面用のモデルや設定ファイルが用意されています。モデルとは、モデルとは、データベース設計をPythonのコードで実装したものです。Django ではモデルをデータベースのテーブルに自動でマッピングする機能が用意されています。モデルをデータベースのテーブルにマッピングすることをマイグレーションと呼びます。マイグレーションを実施するには下記のコマンドを実施します。
+
+```
+$ python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, sessions
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying sessions.0001_initial... OK
+```
+このとき、新しく sqlite3 形式のデータベースファイル `db.sqlite3` が作成されています。
+
+```
+$ ls
+db.sqlite3      manage.py*      mysite/
+```
+
+Webブラウザで管理画面を開いてみます。Webブラウザを立ち上げて、下記のURLにアクセスしてください。
+
+```
+http://localhost:8080/admin/
+```
+ログイン画面が表示されればOKです。
+
+ターミナルには、下記の表示が現れます。
+```
+$ python manage.py runserver 8080
+Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified no issues (0 silenced).
+November 26, 2021 - 17:11:52
+Django version 3.2.9, using settings 'mysite.settings'
+Starting development server at http://127.0.0.1:8080/
+Quit the server with CONTROL-C.
+[26/Nov/2021 17:12:44] "GET /admin/ HTTP/1.1" 302 0
+[26/Nov/2021 17:12:45] "GET /admin/login/?next=/admin/ HTTP/1.1" 200 2214
+[26/Nov/2021 17:12:45] "GET /static/admin/css/base.css HTTP/1.1" 200 19513
+[26/Nov/2021 17:12:45] "GET /static/admin/css/fonts.css HTTP/1.1" 304 0
+[26/Nov/2021 17:12:45] "GET /static/admin/css/login.css HTTP/1.1" 200 939
+[26/Nov/2021 17:12:45] "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2271
+[26/Nov/2021 17:12:45] "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 1360
+[26/Nov/2021 17:12:45] "GET /static/admin/css/responsive.css HTTP/1.1" 200 18545
+[26/Nov/2021 17:12:45] "GET /static/admin/fonts/Roboto-Regular-webfont.woff HTTP/1.1" 304 0
+[26/Nov/2021 17:12:45] "GET /static/admin/fonts/Roboto-Light-webfont.woff HTTP/1.1" 304 0
 ```
 
