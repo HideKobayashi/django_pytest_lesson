@@ -221,3 +221,28 @@ Quit the server with CONTROL-C.
 [26/Nov/2021 17:12:45] "GET /static/admin/fonts/Roboto-Light-webfont.woff HTTP/1.1" 304 0
 ```
 
+## アプリを作成する
+
+ここでは、チュートリアルにしたがって、polls というアプリをつくります。
+
+下記のコマンドを入力してください。
+
+```
+$ python manage.py startapp polls
+```
+`manage.py` があるディレクトリの配下に `polls` というディレクトリが新しく作成されます。その下にはさらにいくつかのファイルが作られています。
+
+```
+$ tree polls
+polls
+├── __init__.py
+├── admin.py
+├── apps.py
+├── migrations
+│   └── __init__.py
+├── models.py
+├── tests.py
+└── views.py
+
+1 directory, 7 files
+```
