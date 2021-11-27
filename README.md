@@ -2,7 +2,7 @@
 
 Django pytest lesson
 
-このリポジトリは、[「はじめての Django アプリ作成、その 1」](https://docs.djangoproject.com/ja/3.2/intro/tutorial01/) で紹介されているプロジェクトに restapi の機能を追加したものです。
+このリポジトリは、[「はじめての Django アプリ作成、その 1」](https://docs.djangoproject.com/ja/3.2/intro/tutorial01/) で紹介されているプロジェクトに restapi の機能を追加したものです。Django で pytest を使う具体的な書き方の例を示すために作成しました。
 
 ## 仕様
 
