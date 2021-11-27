@@ -2,6 +2,43 @@
 
 Django pytest lesson
 
+このリポジトリは、[「はじめての Django アプリ作成、その 1」](https://docs.djangoproject.com/ja/3.2/intro/tutorial01/) で紹介されているプロジェクトに restapi の機能を追加したものです。
+
+## 仕様
+
+追加した restapi の部分についてだけ記載します。
+
+### 機能概要
+
+数値に変換可能な半角英数字を２つ受け取り、２つの値のわを計算して返す。
+
+### リクエスト
+
+- HTTP Request
+- Method: GET
+- URI: /restapi
+- curlコマンド例
+- パラメータ
+
+  - num1: １つ目の数字, 型: 文字列, 項目、値とも必須
+  - num2: ２つ目の数字, 型: 文字列, 項目、値とも必須
+
+### レスポンス
+
+- HTTP Response
+- Content-Type: application/json
+- パラメータ
+
+  - num1: リクエストで受け取り数値に変換された値, 型: 数値
+  - num1: リクエストで受け取り数値に変換された値, 型: 数値
+
+### curlコマンド例と期待値
+
+```sh
+$ curl -X GET "http://localhost:8000/restapi?num1=3&num2=7"
+{"num1": 3, "num2": 7, "result": 10, "statusCode": 200, "message": "OK"}
+```
+
 ## 環境構築
 
 MacOS の場合の設定方法
@@ -10,16 +47,16 @@ Homebrew と pyenv をインストールしていない場合はインストー�
 インストール方法は、下記ページなどを参考にする。
 
 Pythonの開発環境を用意しよう！（Mac）
-https://prog-8.com/docs/python-env
+[https://prog-8.com/docs/python-env](https://prog-8.com/docs/python-env)
 
 Python 環境設定 (Windows10, MacOS)
-https://midsatoh.github.io/python/install/
+[https://midsatoh.github.io/python/install/](https://midsatoh.github.io/python/install/)
 
 ここでは pyenv を使って、python 3.6.11 をインストールしたものとして以下進めます。詳しい手順は割愛します。
 
 python のバージョンを確認します。
 
-```
+```sh
 $ python -V
 python 3.6.11
 ```
@@ -27,23 +64,29 @@ python 3.6.11
 ## Python 仮想環境を使う
 
 仮想環境を作成する
-```
+
+```sh
 $ python -m venv ~/.venvs/venv_py36
+$
 ```
 
 仮想環境を有効化
-```
+
+```sh
 $ source ~/.venvs/venv_py36/bin/activate
 (venv_py36) $
 ```
+
 仮想環境が有効になると、プロンプトの先頭に仮想環境名が丸括弧で示されます。
 
 仮想環境を無効化
-```
+
+```sh
 (venv_py36) $ deactivate
 $
 ```
-仮想環境が向こうになると、プロンプトの先頭の仮想環境名が消えてもとにもどります。
+
+仮想環境が無効になると、プロンプトの先頭の仮想環境名が消えて元にもどります。
 
 ## Django, pytest, pytest-django のインストール
 
@@ -51,7 +94,7 @@ Django, pytest, pytest-django をインストールします。
 
 インストール前のパッケージの確認
 
-```
+```sh
 $ pip list
 Package    Version
 ---------- -------
@@ -60,12 +103,14 @@ setuptools 40.6.2
 ```
 
 パッケージのインストール
-```
+
+```sh
 (venv_py36) $ pip install django pytest pytest-django
 ```
 
 インストールしたあとのパッケージの確認
-```
+
+```sh
 (venv_py36) $ pip list
 Package            Version
 ------------------ -------
@@ -91,7 +136,7 @@ zipp               3.6.0
 
 パッケージのバージョンを含めて環境を再現できるよう、パッケージのバージョン付きリストを作成します。
 
-```
+```sh
 (venv_py36) $ pip freeze > requirements.lock
 ```
 
@@ -102,11 +147,11 @@ zipp               3.6.0
 下記のページを参考にして、Djangoプロジェクトを作成する。
 
 はじめての Django アプリ作成、その 1
-https://docs.djangoproject.com/ja/3.2/intro/tutorial01/
+[https://docs.djangoproject.com/ja/3.2/intro/tutorial01/](https://docs.djangoproject.com/ja/3.2/intro/tutorial01/)
 
 下記のようなファイルが自動作成されます。
 
-```
+```sh
 $ tree mysite
 mysite
 ├── manage.py
@@ -120,19 +165,22 @@ mysite
 
 開発用Webサーバをローカル環境で起動します
 
-```
+```sh
 $ cd mysite
 $ python manage.py runserver 8080
 ```
 
 Webブラウザを立ち上げて、下記のURLを指定します。
-```
+
+```sh
 http://localhost:8080/
 ```
+
 ロケットのアニメーションが表示されればOKです。
 
 ターミナルには下記のようなメッセージが表示されます。
-```
+
+```sh
 $ python manage.py runserver 8080
 Watching for file changes with StatReloader
 Performing system checks...
@@ -156,12 +204,11 @@ Not Found: /favicon.ico
 
 開発用サーバを停止するには、Ctrl-c を押します。
 
-
 ## モデルのマイグレーション
 
 初期状態で、管理画面用のモデルや設定ファイルが用意されています。モデルとは、モデルとは、データベース設計をPythonのコードで実装したものです。Django ではモデルをデータベースのテーブルに自動でマッピングする機能が用意されています。モデルをデータベースのテーブルにマッピングすることをマイグレーションと呼びます。マイグレーションを実施するには下記のコマンドを実施します。
 
-```
+```sh
 $ python manage.py migrate
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, sessions
@@ -185,22 +232,25 @@ Running migrations:
   Applying auth.0012_alter_user_first_name_max_length... OK
   Applying sessions.0001_initial... OK
 ```
+
 このとき、新しく sqlite3 形式のデータベースファイル `db.sqlite3` が作成されています。
 
-```
+```sh
 $ ls
 db.sqlite3      manage.py*      mysite/
 ```
 
 Webブラウザで管理画面を開いてみます。Webブラウザを立ち上げて、下記のURLにアクセスしてください。
 
-```
+```sh
 http://localhost:8080/admin/
 ```
+
 ログイン画面が表示されればOKです。
 
 ターミナルには、下記の表示が現れます。
-```
+
+```sh
 $ python manage.py runserver 8080
 Watching for file changes with StatReloader
 Performing system checks...
@@ -228,12 +278,13 @@ Quit the server with CONTROL-C.
 
 下記のコマンドを入力してください。
 
-```
+```sh
 $ python manage.py startapp polls
 ```
+
 `manage.py` があるディレクトリの配下に `polls` というディレクトリが新しく作成されます。その下にはさらにいくつかのファイルが作られています。
 
-```
+```sh
 $ tree polls
 polls
 ├── __init__.py
@@ -290,13 +341,13 @@ urlpatterns = [
 
 ここまで終わったら、開発用サーバーを起動します。
 
-```
+```sh
 $ python manage.py runserver 8080
 ```
 
 ブラウザで確認します。
 
-```
+```sh
 http://localhost:8080/polls/
 ```
 
