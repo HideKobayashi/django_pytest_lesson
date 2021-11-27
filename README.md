@@ -2,6 +2,43 @@
 
 Django pytest lesson
 
+このリポジトリは、[「はじめての Django アプリ作成、その 1」](https://docs.djangoproject.com/ja/3.2/intro/tutorial01/) で紹介されているプロジェクトに restapi の機能を追加したものです。
+
+## 仕様
+
+追加した restapi の部分についてだけ記載します。
+
+### 機能概要
+
+数値に変換可能な半角英数字を２つ受け取り、２つの値のわを計算して返す。
+
+### リクエスト
+
+- HTTP Request
+- Method: GET
+- URI: /restapi
+- curlコマンド例
+- パラメータ
+
+  - num1: １つ目の数字, 型: 文字列, 項目、値とも必須
+  - num2: ２つ目の数字, 型: 文字列, 項目、値とも必須
+
+### レスポンス
+
+- HTTP Response
+- Content-Type: application/json
+- パラメータ
+
+  - num1: リクエストで受け取り数値に変換された値, 型: 数値
+  - num1: リクエストで受け取り数値に変換された値, 型: 数値
+
+### curlコマンド例と期待値
+
+```bash
+$ curl -X GET "http://localhost:8000/restapi?num1=3&num2=7"
+{"num1": 3, "num2": 7, "result": 10, "statusCode": 200, "message": "OK"}
+```
+
 ## 環境構築
 
 MacOS の場合の設定方法
@@ -19,7 +56,7 @@ https://midsatoh.github.io/python/install/
 
 python のバージョンを確認します。
 
-```
+```bash
 $ python -V
 python 3.6.11
 ```
@@ -27,23 +64,28 @@ python 3.6.11
 ## Python 仮想環境を使う
 
 仮想環境を作成する
-```
+
+```bash
 $ python -m venv ~/.venvs/venv_py36
 ```
 
 仮想環境を有効化
-```
+
+```bash
 $ source ~/.venvs/venv_py36/bin/activate
 (venv_py36) $
 ```
+
 仮想環境が有効になると、プロンプトの先頭に仮想環境名が丸括弧で示されます。
 
 仮想環境を無効化
+
 ```
 (venv_py36) $ deactivate
 $
 ```
-仮想環境が向こうになると、プロンプトの先頭の仮想環境名が消えてもとにもどります。
+
+仮想環境が無効になると、プロンプトの先頭の仮想環境名が消えて元にもどります。
 
 ## Django, pytest, pytest-django のインストール
 
@@ -51,7 +93,7 @@ Django, pytest, pytest-django をインストールします。
 
 インストール前のパッケージの確認
 
-```
+```bash
 $ pip list
 Package    Version
 ---------- -------
@@ -60,12 +102,14 @@ setuptools 40.6.2
 ```
 
 パッケージのインストール
-```
+
+```bash
 (venv_py36) $ pip install django pytest pytest-django
 ```
 
 インストールしたあとのパッケージの確認
-```
+
+```bash
 (venv_py36) $ pip list
 Package            Version
 ------------------ -------
@@ -91,7 +135,7 @@ zipp               3.6.0
 
 パッケージのバージョンを含めて環境を再現できるよう、パッケージのバージョン付きリストを作成します。
 
-```
+```bash
 (venv_py36) $ pip freeze > requirements.lock
 ```
 
@@ -106,7 +150,7 @@ https://docs.djangoproject.com/ja/3.2/intro/tutorial01/
 
 下記のようなファイルが自動作成されます。
 
-```
+```bash
 $ tree mysite
 mysite
 ├── manage.py
@@ -120,19 +164,22 @@ mysite
 
 開発用Webサーバをローカル環境で起動します
 
-```
+```bash
 $ cd mysite
 $ python manage.py runserver 8080
 ```
 
 Webブラウザを立ち上げて、下記のURLを指定します。
-```
+
+```bash
 http://localhost:8080/
 ```
+
 ロケットのアニメーションが表示されればOKです。
 
 ターミナルには下記のようなメッセージが表示されます。
-```
+
+```bash
 $ python manage.py runserver 8080
 Watching for file changes with StatReloader
 Performing system checks...
@@ -161,7 +208,7 @@ Not Found: /favicon.ico
 
 初期状態で、管理画面用のモデルや設定ファイルが用意されています。モデルとは、モデルとは、データベース設計をPythonのコードで実装したものです。Django ではモデルをデータベースのテーブルに自動でマッピングする機能が用意されています。モデルをデータベースのテーブルにマッピングすることをマイグレーションと呼びます。マイグレーションを実施するには下記のコマンドを実施します。
 
-```
+```bash
 $ python manage.py migrate
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, sessions
@@ -185,22 +232,24 @@ Running migrations:
   Applying auth.0012_alter_user_first_name_max_length... OK
   Applying sessions.0001_initial... OK
 ```
+
 このとき、新しく sqlite3 形式のデータベースファイル `db.sqlite3` が作成されています。
 
-```
+```bash
 $ ls
 db.sqlite3      manage.py*      mysite/
 ```
 
 Webブラウザで管理画面を開いてみます。Webブラウザを立ち上げて、下記のURLにアクセスしてください。
 
-```
+```bash
 http://localhost:8080/admin/
 ```
 ログイン画面が表示されればOKです。
 
 ターミナルには、下記の表示が現れます。
-```
+
+```bash
 $ python manage.py runserver 8080
 Watching for file changes with StatReloader
 Performing system checks...
@@ -228,12 +277,12 @@ Quit the server with CONTROL-C.
 
 下記のコマンドを入力してください。
 
-```
+```bash
 $ python manage.py startapp polls
 ```
 `manage.py` があるディレクトリの配下に `polls` というディレクトリが新しく作成されます。その下にはさらにいくつかのファイルが作られています。
 
-```
+```bash
 $ tree polls
 polls
 ├── __init__.py
@@ -290,13 +339,13 @@ urlpatterns = [
 
 ここまで終わったら、開発用サーバーを起動します。
 
-```
+```bash
 $ python manage.py runserver 8080
 ```
 
 ブラウザで確認します。
 
-```
+```bash
 http://localhost:8080/polls/
 ```
 
